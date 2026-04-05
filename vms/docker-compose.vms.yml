@@ -1,0 +1,180 @@
+# All VMs use the same image; only vm-linux-easy builds it to avoid parallel-build conflicts.
+# VM unlock reports to the API: set CYBERRANGEX_VM_SECRET (same as backend .env). If the backend
+# runs in Docker on this compose network, set CYBERRANGEX_API_BASE=http://backend:5000 when merging
+# with the root docker-compose.yml; for backend on the host, host.docker.internal (default) is used.
+# Same project name as main app so VMs show under "ctf-cyberrangex" in Docker Desktop.
+name: ctf-cyberrangex
+services:
+  # Linux Privilege Escalation VMs
+  vm-linux-easy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-linux-easy
+    ports:
+      - "2220:22"      # SSH
+      - "4200:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=easy
+      - DOMAIN=linux-privilege-escalation
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  vm-linux-medium:
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-linux-medium
+    ports:
+      - "2230:22"      # SSH
+      - "4210:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=medium
+      - DOMAIN=linux-privilege-escalation
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  vm-linux-hard:
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-linux-hard
+    ports:
+      - "2240:22"      # SSH
+      - "4220:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=hard
+      - DOMAIN=linux-privilege-escalation
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # Active Directory Attacks VMs (Linux-based for now)
+  vm-ad-easy:
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-ad-easy
+    ports:
+      - "2221:22"      # SSH
+      - "4260:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=easy
+      - DOMAIN=active-directory
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  vm-ad-medium:
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-ad-medium
+    ports:
+      - "2222:22"      # SSH
+      - "4270:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=medium
+      - DOMAIN=active-directory
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  vm-ad-hard:
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-ad-hard
+    ports:
+      - "2223:22"      # SSH
+      - "4280:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=hard
+      - DOMAIN=active-directory
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # Full Machine Exploitation (Pentest Lab) VMs
+  vm-pentest-easy:
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-pentest-easy
+    ports:
+      - "2250:22"      # SSH
+      - "4230:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=easy
+      - DOMAIN=pentest-lab
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  vm-pentest-medium:
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-pentest-medium
+    ports:
+      - "2260:22"      # SSH
+      - "4240:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=medium
+      - DOMAIN=pentest-lab
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  vm-pentest-hard:
+    image: ctf-cyberrangex-vm:latest
+    container_name: vm-pentest-hard
+    ports:
+      - "2270:22"      # SSH
+      - "4250:4200"    # Web Terminal
+    environment:
+      - VM_TYPE=linux
+      - DIFFICULTY=hard
+      - DOMAIN=pentest-lab
+      - CYBERRANGEX_VM_SECRET=${CYBERRANGEX_VM_SECRET:-dev_cyberrangex_vm_secret}
+      - CYBERRANGEX_API_BASE=${CYBERRANGEX_API_BASE:-http://host.docker.internal:5000}
+    networks:
+      - cyberrangex-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+# When used with root docker-compose.yml, the network is created by the root file.
+# For vms-only runs, create the network first: docker network create cyberrangex-network
+networks:
+  cyberrangex-network:
+    name: cyberrangex-network

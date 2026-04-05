@@ -1,0 +1,582 @@
+/* ======================
+   ADMIN LOGIN
+====================== */
+
+.admin-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg);
+  padding: 20px;
+}
+
+.admin-login-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.admin-login-box h2 {
+  color: var(--primary);
+  margin-bottom: 25px;
+  font-size: 2em;
+  text-shadow: 0 0 10px cyan;
+}
+
+.admin-login-box .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.admin-login-box label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-weight: bold;
+}
+
+.admin-login-box input[type="email"],
+.admin-login-box input[type="password"] {
+  width: 100%;
+  padding: 12px 10px;
+  background: var(--bg-tertiary, #16213e);
+  color: var(--text);
+  border: 1px solid var(--border, #334);
+  border-radius: 6px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.admin-login-box input[type="email"]:focus,
+.admin-login-box input[type="password"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 8px cyan;
+  outline: none;
+}
+
+.admin-login-box button[type="submit"] {
+  background: var(--primary);
+  color: #0a0e27;
+  border: none;
+  padding: 12px 20px;
+  width: 100%;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 1.1em;
+}
+
+.admin-login-box button[type="submit"]:hover:not(:disabled) {
+  background: #00f7ff;
+  box-shadow: 0 0 12px cyan;
+}
+
+.admin-login-box button[type="submit"]:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.admin-login-back {
+  margin-top: 16px;
+  font-size: 0.9rem;
+}
+
+.admin-login-back a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.admin-login-back a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .admin-login-box {
+    padding: 30px 20px;
+  }
+
+  .admin-login-box h2 {
+    font-size: 1.8em;
+  }
+}
+
+/* ======================
+   ADMIN PAGE
+====================== */
+
+.admin-page {
+  color: var(--text);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.admin-header {
+  margin-bottom: 30px;
+}
+
+.admin-header h1 {
+  color: var(--primary);
+  text-shadow: 0 0 8px cyan;
+  margin-bottom: 10px;
+  font-size: 2.5em;
+}
+
+.admin-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1em;
+  margin: 0;
+}
+
+/* ======================
+   CREATE/EDIT FORM
+====================== */
+
+.admin-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
+}
+
+.admin-form h2 {
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-size: 1.8em;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.edit-notice {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text);
+}
+
+.cancel-edit-btn {
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+
+.cancel-edit-btn:hover {
+  background: #ff3366;
+  box-shadow: 0 0 8px rgba(255, 51, 102, 0.5);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-row-inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1em;
+  font-family: inherit;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+  outline: none;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85em;
+  color: var(--text-secondary);
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+}
+
+/* VM Configuration Section */
+.vm-config-section {
+  background: rgba(0, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.vm-config-fields {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.submit-btn {
+  background: var(--primary);
+  color: #0a0e27;
+  border: none;
+  padding: 14px 28px;
+  width: 100%;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.1em;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: #00f7ff;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ======================
+   CHALLENGES SECTION
+====================== */
+
+.challenges-section {
+  margin-top: 40px;
+}
+
+.section-header {
+  margin-bottom: 25px;
+}
+
+.section-header h2 {
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-size: 2em;
+}
+
+.admin-filters {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-input,
+.filter-select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95em;
+  transition: all 0.2s;
+}
+
+.search-input:focus,
+.filter-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+  outline: none;
+}
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  font-size: 1.1em;
+}
+
+/* ======================
+   CHALLENGE CARDS
+====================== */
+
+.admin-challenges {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.admin-ch-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-ch-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 255, 255, 0.2);
+  border-color: var(--primary);
+}
+
+.ch-card-header {
+  margin-bottom: 15px;
+}
+
+.ch-card-header h3 {
+  color: var(--primary);
+  margin: 0 0 12px 0;
+  font-size: 1.3em;
+  line-height: 1.3;
+}
+
+.ch-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.difficulty-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.points-badge {
+  background: rgba(0, 255, 255, 0.2);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.ch-card-body {
+  flex: 1;
+  margin-bottom: 15px;
+}
+
+.ch-card-body p {
+  margin: 8px 0;
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.ch-card-body strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ch-domain,
+.ch-category {
+  color: var(--text);
+  font-size: 0.95em;
+}
+
+.ch-description {
+  margin-top: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ch-lab-path {
+  color: var(--primary);
+  font-size: 0.85em;
+  margin-top: 8px;
+}
+
+.vm-badge {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: rgba(236, 72, 153, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.vm-badge span {
+  color: #ec4899;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.ch-hints {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+}
+
+.ch-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.edit-btn,
+.delete-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-size: 0.95em;
+}
+
+.edit-btn {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.edit-btn:hover {
+  background: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+}
+
+.delete-btn {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
+}
+
+/* ======================
+   RESPONSIVE
+====================== */
+
+@media (max-width: 1024px) {
+  .admin-challenges {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-page {
+    padding: 15px;
+  }
+
+  .admin-header h1 {
+    font-size: 2em;
+  }
+
+  .admin-form {
+    padding: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row-inline {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-filters {
+    flex-direction: column;
+  }
+
+  .filter-group {
+    min-width: 100%;
+  }
+
+  .admin-challenges {
+    grid-template-columns: 1fr;
+  }
+
+  .ch-card-actions {
+    flex-direction: column;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-login-box {
+    padding: 30px 20px;
+  }
+
+  .admin-login-box h2 {
+    font-size: 1.8em;
+  }
+
+  .admin-form {
+    padding: 15px;
+  }
+
+  .vm-config-section {
+    padding: 15px;
+  }
+}

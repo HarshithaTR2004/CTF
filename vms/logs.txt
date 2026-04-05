@@ -1,0 +1,21 @@
+﻿ * Starting OpenBSD Secure Shell server sshd       [80G Privilege separation user sshd does not exist
+
+
+[74G[[31mfail[39;49m]
+chown: invalid user: 'user:user'
+su: user user does not exist or the user entry does not contain all the required fields
+su: user user does not exist or the user entry does not contain all the required fields
+ * Starting OpenBSD Secure Shell server sshd       [80G Privilege separation user sshd does not exist
+
+
+[74G[[31mfail[39;49m]
+chown: invalid user: 'user:user'
+su: user user does not exist or the user entry does not contain all the required fields
+su: user user does not exist or the user entry does not contain all the required fields
+ * Starting OpenBSD Secure Shell server sshd       [80G Privilege separation user sshd does not exist
+
+
+[74G[[31mfail[39;49m]
+chown: invalid user: 'user:user'
+su: user user does not exist or the user entry does not contain all the required fields
+su: user user does not exist or the user entry does not contain all the required fields

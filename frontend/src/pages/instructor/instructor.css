@@ -1,0 +1,114 @@
+.instructor-page {
+  color: var(--text);
+}
+
+.instructor-page h1 {
+  color: var(--primary);
+  text-shadow: 0 0 8px cyan;
+  margin-bottom: 20px;
+}
+
+/* ======================
+   SECTIONS
+====================== */
+
+.panel-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 0 15px rgba(0,255,255,0.2);
+}
+
+.panel-section h2 {
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.panel-section input,
+.panel-section select {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.panel-section input:focus,
+.panel-section select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 6px cyan;
+}
+
+.panel-section button {
+  background: var(--primary);
+  color: black;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.panel-section button:hover {
+  background: #00f7ff;
+  box-shadow: 0 0 8px cyan;
+}
+
+/* ======================
+   STUDENT TABLE
+====================== */
+
+.student-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.student-header,
+.student-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  padding: 12px;
+  text-align: center;
+}
+
+.student-header {
+  background: linear-gradient(90deg, #020617, #040b1a);
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.student-row {
+  color: #ddd;
+  border-top: 1px solid var(--border);
+  transition: background 0.2s ease;
+}
+
+.student-row:hover {
+  background: rgba(0,255,255,0.06);
+}
+
+/* ======================
+   RESPONSIVE
+====================== */
+
+@media (max-width: 700px) {
+  .student-header,
+  .student-row {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+
+  .student-header span:nth-child(4),
+  .student-header span:nth-child(5),
+  .student-row span:nth-child(4),
+  .student-row span:nth-child(5) {
+    display: none;
+  }
+}

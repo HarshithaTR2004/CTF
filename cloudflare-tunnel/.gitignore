@@ -1,0 +1,7 @@
+# Local tunnel config (contains your tunnel id / paths)
+config.yml
+# Remote tunnel token from Zero Trust dashboard (secret)
+tunnel.token
+# Ad-hoc quick tunnel logs (local only)
+quick-tunnel.log
+quick-tunnel-out.log

@@ -1,0 +1,14 @@
+:root {
+  --bg: #f5f7fa;
+  --card: #ffffff;
+  --text: #020617;
+  --primary: #0066ff;
+  --secondary: #00aa55;
+  --danger: #cc0000;
+  --border: #0066ff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}

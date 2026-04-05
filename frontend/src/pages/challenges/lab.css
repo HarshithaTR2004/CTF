@@ -1,0 +1,160 @@
+/* =============================
+   LAB VIEWER BASE
+============================= */
+
+.lab-container {
+  display: flex;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =============================
+   LEFT PANEL – INFO
+============================= */
+
+.lab-info {
+  width: 35%;
+  background: var(--card);
+  border-right: 2px solid var(--border);
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: inset -5px 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.lab-info h2 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  text-shadow: 0 0 6px cyan;
+}
+
+.lab-info h3 {
+  color: var(--primary);
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.lab-info p,
+.lab-info li {
+  color: #ccc;
+  font-size: 14px;
+}
+
+.lab-info ul {
+  padding-left: 18px;
+}
+
+.lab-info hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 15px 0;
+}
+
+/* =============================
+   FLAG INPUT + BUTTONS
+============================= */
+
+.flag-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+}
+
+.flag-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 6px cyan;
+}
+
+.lab-info button {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  background: var(--primary);
+  color: black;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.lab-info button:hover {
+  background: #00f7ff;
+  box-shadow: 0 0 8px cyan;
+}
+
+/* Reset button */
+.reset-btn {
+  background: var(--danger) !important;
+  color: white !important;
+}
+
+.reset-btn:hover {
+  background: #ff3366 !important;
+  box-shadow: 0 0 8px #ff3366;
+}
+
+/* =============================
+   RIGHT PANEL – LAB VIEW
+============================= */
+
+.lab-view {
+  width: 65%;
+  background: #000;
+  position: relative;
+}
+
+.lab-view iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Optional loading overlay */
+.lab-view::before {
+  content: "Loading Cyber Lab...";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: cyan;
+  font-size: 12px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+============================= */
+
+@media (max-width: 900px) {
+  .lab-container {
+    flex-direction: column;
+  }
+
+  .lab-info,
+  .lab-view {
+    width: 100%;
+    height: 50vh;
+  }
+
+  .lab-info {
+    border-right: none;
+    border-bottom: 2px solid var(--border);
+  }
+}
+
+@media (max-width: 500px) {
+  .lab-info h2 {
+    font-size: 18px;
+  }
+
+  .lab-info p,
+  .lab-info li {
+    font-size: 13px;
+  }
+}

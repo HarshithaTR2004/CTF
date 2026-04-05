@@ -1,0 +1,57 @@
+/* XP BAR */
+.xp-container {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.xp-text {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.xp-bar {
+  background: #111;
+  border-radius: 5px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.xp-fill {
+  background: linear-gradient(90deg, #00ff88, cyan);
+  height: 100%;
+}
+
+/* BADGES */
+.badge-ui {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.badge-ui.gold {
+  background: gold;
+  color: black;
+}
+
+.badge-ui.silver {
+  background: silver;
+  color: black;
+}
+
+.badge-ui.bronze {
+  background: #cd7f32;
+  color: white;
+}
+
+/* STREAK */
+.streak-box {
+  background: rgba(255, 100, 0, 0.2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

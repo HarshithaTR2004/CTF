@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{LAB_NAME}}
+  namespace: cyberrangex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{LAB_NAME}}
+  template:
+    metadata:
+      labels:
+        app: {{LAB_NAME}}
+    spec:
+      containers:
+      - name: lab
+        image: cyberrangex-{{LAB_NAME}}:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{LAB_NAME}}-service
+  namespace: cyberrangex
+spec:
+  selector:
+    app: {{LAB_NAME}}
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: ClusterIP
+
